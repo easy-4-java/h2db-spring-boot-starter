@@ -4,8 +4,8 @@ package org.h2.spring.boot.ext;
 import java.sql.Connection;
 import java.sql.Statement;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 
 
 /** 
