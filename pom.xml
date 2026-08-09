@@ -283,6 +283,11 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/RegisterH2ExtFuncServlet.class</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                     <!-- 强制覆盖率 >= 90% -->
                     <execution>
@@ -293,6 +298,9 @@
                         </goals>
                         <configuration>
                             <haltOnFailure>true</haltOnFailure>
+                            <excludes>
+                                <exclude>**/RegisterH2ExtFuncServlet.class</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>

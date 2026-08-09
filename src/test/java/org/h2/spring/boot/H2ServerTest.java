@@ -1,82 +1,78 @@
 package org.h2.spring.boot;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import java.sql.Connection;  
-import java.sql.DriverManager;  
-import java.sql.ResultSet;  
-import java.sql.SQLException;  
-import java.sql.Statement;  
- 
-import org.h2.tools.Server;  
-import org.junit.Test;  
- 
-public class H2ServerTest {  
- 
-   @Test  
-   public void h2Test() {  
-       start();  
-       crudTest();  
-       stop();  
-   }  
- 
-   private Server server;  
- 
-   public void start() {  
-       try {  
-           System.out.println("正在启动h2...");  
-           server = Server.createTcpServer(  
-                   new String[] { "-tcp", "-tcpAllowOthers", "-tcpPort",  
-                           "8043" }).start();  
-           System.out.println("启动成功：" + server.getStatus());  
-       } catch (SQLException e) {  
-           System.out.println("启动h2出错：" + e.toString());  
- 
-           e.printStackTrace();  
-           throw new RuntimeException(e);  
-       }  
-   }  
- 
-   public void stop() {  
-       if (server != null) {  
-           System.out.println("正在关闭h2...");  
-           server.stop();  
-           System.out.println("关闭成功.");  
-       }  
-   }  
- 
-   public void crudTest() {  
-       try {  
-           Class.forName("org.h2.Driver");  
- 
-           // connect to h2  
-           Connection conn = DriverManager.getConnection(  
-                   "jdbc:h2:./h2db/sxaz42b4", "sa", "sa");  
- 
-           Statement stat = conn.createStatement();  
- 
-           // create table  
-           stat.execute("CREATE TABLE TEST(NAME VARCHAR)");  
- 
-           // insert table  
-           stat.execute("INSERT INTO TEST VALUES('菩提树下的杨过')");  
-           stat.execute("INSERT INTO TEST VALUES('http://yjmyzz.cnblogs.com/')");  
- 
-           // retrive data  
-           ResultSet result = stat.executeQuery("select name from test ");  
-           int i = 1;  
-           while (result.next()) {  
-               System.out.println(i++ + ":" + result.getString("name"));  
-           }  
- 
-           // drop table  
-           stat.execute("DROP TABLE TEST");  
- 
-           result.close();  
-           stat.close();  
-           conn.close();  
-       } catch (Exception e) {  
-           e.printStackTrace();  
-       }  
-   }  
- 
-}  
+import org.h2.tools.Server;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * Integration tests for H2 servers and JDBC operations.
+ *
+ * @author Loong Wan
+ * @see <a href="https://github.com/loong10k">https://github.com/loong10k</a>
+ */
+class H2ServerTest {
+
+	@Test
+	@DisplayName("should perform CRUD via in-process H2 connection")
+	void h2CrudTest() throws Exception {
+		Class.forName("org.h2.Driver");
+		try (Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "sa");
+			 Statement stat = conn.createStatement()) {
+
+			// create table
+			stat.execute("CREATE TABLE IF NOT EXISTS TEST(NAME VARCHAR)");
+
+			// insert
+			stat.execute("INSERT INTO TEST VALUES('test-value-1')");
+			stat.execute("INSERT INTO TEST VALUES('test-value-2')");
+
+			// retrieve
+			try (ResultSet result = stat.executeQuery("SELECT NAME FROM TEST ORDER BY NAME")) {
+				assertThat(result.next()).isTrue();
+				assertThat(result.getString("NAME")).isEqualTo("test-value-1");
+				assertThat(result.next()).isTrue();
+				assertThat(result.getString("NAME")).isEqualTo("test-value-2");
+				assertThat(result.next()).isFalse();
+			}
+
+			// drop table
+			stat.execute("DROP TABLE TEST");
+		}
+	}
+
+	@Test
+	@DisplayName("should start and stop H2 TCP server")
+	void tcpServerTest() throws SQLException {
+		Server server = Server.createTcpServer(
+				"-tcp", "-tcpAllowOthers", "-tcpPort", "8043").start();
+		assertThat(server.getStatus()).contains("TCP server running");
+		server.stop();
+		assertThat(server.getStatus()).isEqualTo("Not started");
+	}
+
+	@Test
+	@DisplayName("should start and stop PG server")
+	void pgServerTest() throws SQLException {
+		Server server = Server.createPgServer("-pgAllowOthers", "-pgPort", "5535").start();
+		assertThat(server.getStatus()).contains("PG server running");
+		server.stop();
+		assertThat(server.getStatus()).isEqualTo("Not started");
+	}
+
+	@Test
+	@DisplayName("should start and stop web server")
+	void webServerTest() throws SQLException {
+		Server server = Server.createWebServer("-webAllowOthers", "-webPort", "0").start();
+		assertThat(server.getStatus()).contains("running");
+		server.stop();
+		assertThat(server.getStatus()).isEqualTo("Not started");
+	}
+}
