@@ -18,7 +18,7 @@ import org.springframework.core.io.ResourceLoader;
 /**
  * Auto-configuration for H2 Database server.
  *
- * @author Loong Wan
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @see <a href="https://github.com/loong10k">https://github.com/loong10k</a>
  */
 @Configuration

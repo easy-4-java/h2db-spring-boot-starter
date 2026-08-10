@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for {@link RegisterH2ExtFuncServlet}.
  *
- * @author Loong Wan
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @see <a href="https://github.com/loong10k">https://github.com/loong10k</a>
  */
 class RegisterH2ExtFuncServletTest {

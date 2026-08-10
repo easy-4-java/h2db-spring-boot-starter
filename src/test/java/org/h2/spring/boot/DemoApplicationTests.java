@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests for Spring Boot auto-configuration loading.
  *
- * @author Loong Wan
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @see <a href="https://github.com/loong10k">https://github.com/loong10k</a>
  */
 class DemoApplicationTests {

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 /**
  * Tests for {@link H2dbServerProperties}.
  *
- * @author Loong Wan
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @see <a href="https://github.com/loong10k">https://github.com/loong10k</a>
  */
 class H2dbServerPropertiesTest {
