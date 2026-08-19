@@ -22,6 +22,9 @@ public class RegisterH2ExtFuncServlet extends HttpServlet {
   */   
   private static final long serialVersionUID = 4379248469825545593L;  
 
+  /**
+   * <p>Init.</p>
+   */
   public void init() throws ServletException {
 	  
       //1、注册uuid函数的SQL语句  

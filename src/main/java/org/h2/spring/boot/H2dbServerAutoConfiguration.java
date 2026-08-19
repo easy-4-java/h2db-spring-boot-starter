@@ -25,6 +25,11 @@ import org.springframework.core.io.ResourceLoader;
 @ConditionalOnClass(org.h2.Driver.class)
 @ConditionalOnProperty(prefix = H2dbServerProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ H2dbServerProperties.class })
+/**
+ * <p>Auto-configuration for H2dbServerAutoConfiguration.</p>
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class H2dbServerAutoConfiguration implements ResourceLoaderAware {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,6 +45,10 @@ public class H2dbServerAutoConfiguration implements ResourceLoaderAware {
 	 */
 	@Bean
 	@ConditionalOnExpression("${h2.tcp.enabled:false}")
+	/**
+	 * <p>H2 tcp server.</p>
+	 * @return the result
+	 */
 	public Server h2TcpServer() throws SQLException {
 		logger.info("Starting H2 TCP server on port {}", properties.getTcpPort());
 		return Server.createTcpServer("-tcpAllowOthers", "-tcpPort", properties.getTcpPort()).start();
@@ -58,6 +67,7 @@ public class H2dbServerAutoConfiguration implements ResourceLoaderAware {
 	}
 
 	@Override
+	/** @param resourceLoader set the resource loader. */
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
